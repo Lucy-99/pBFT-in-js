@@ -1,5 +1,6 @@
 interface NodeEvent {
-  type: string;
+    type: string;
+    data: any;
 }
 
 export default NodeEvent;

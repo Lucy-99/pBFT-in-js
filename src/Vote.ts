@@ -2,7 +2,8 @@ interface Vote {
   height: number;
   round: number;
   nodeId: number;
-  data: string | null;
+  type: string;
+  data: number | null;
 }
 
 export default Vote;
