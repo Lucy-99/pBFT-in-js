@@ -1,4 +1,4 @@
-import NodeEvent from "./Event";
+import NodeEvent from "../interfaces/Event";
 
 class Queue {
   private list: Array<NodeEvent>;
@@ -17,7 +17,7 @@ class Queue {
   };
   size = () => this.list.length;
   show = () => {
-    console.log("queue", this.list);
+    //console.log("queue", this.list);
   };
 
   isEmpty = () => this.list.length === 0;

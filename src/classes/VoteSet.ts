@@ -1,5 +1,5 @@
-import Vote from "./Vote";
-import VOTE_TYPE from "./VoteType";
+import Vote from "../interfaces/Vote";
+import VOTE_TYPE from "../types/VoteType";
 
 class HeightVoteSet {
   height: number;
@@ -65,12 +65,12 @@ class VoteSet {
 
   addVote = (v: Vote) => {
     if (this.votes.has(v.nodeId)) {
-      console.log(`vote from ${v.nodeId} already exists`);
+      //console.log(`vote from ${v.nodeId} already exists`);
       return;
     }
     if (!this.verifyVote(v)) return;
 
-    console.log(`vote from ${v.nodeId} added`, v);
+    //console.log(`vote from ${v.nodeId} added`, v);
     this.votes.set(v.nodeId, v);
     this.updateVoteCount(v);
   };
@@ -108,7 +108,7 @@ class VoteSet {
   };
 
   showVotes = () => {
-    console.log(this.votes);
+    //    console.log(this.votes);
   };
 }
 

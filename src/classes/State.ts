@@ -1,12 +1,12 @@
 import axios from "axios";
-import NodeEvent from "./Event";
-import EVENT_TYPE from "./EventTypes";
-import Proposal from "./Proposal";
+import NodeEvent from "../interfaces/Event";
+import EVENT_TYPE from "../types/EventType";
+import Proposal from "../interfaces/Proposal";
 import Queue from "./Queue";
-import Timeout from "./Timeout";
-import Vote from "./Vote";
+import Timeout from "../interfaces/Timeout";
+import Vote from "../interfaces/Vote";
 import HeightVoteSet from "./VoteSet";
-import VOTE_TYPE from "./VoteType";
+import VOTE_TYPE from "../types/VoteType";
 
 const PEER_COUNT = 4;
 
@@ -99,7 +99,7 @@ class State {
   };
 
   private handleProposal = (p: Proposal) => {
-    console.log("handling proposal", p);
+    //console.log("handling proposal", p);
     if (p.height !== this.height || p.round !== this.round) return;
     if (p.polRound !== -1 && p.polRound >= p.round) return;
     // TODO: check proposer
@@ -122,7 +122,7 @@ class State {
   };
 
   private handleVote = (v: Vote) => {
-    console.log("handling vote", v);
+    //console.log("handling vote", v);
     if (v.height === this.height - 1 && v.type === VOTE_TYPE.PRECOMMIT) {
       return;
     }
@@ -157,18 +157,18 @@ class State {
         }
         // round skip: any +2/3 prevote(h, r+x)
         if (this.round < v.round && pvs.hasTwoThirdsAny()) {
-          console.log("round skip by +2/3 prevote");
+          //console.log("round skip by +2/3 prevote");
           this.newRound(this.height, v.round);
         } else if (this.round === v.round && this.step >= RoundStep.Prevote) {
           let major = pvs.getTwoThirdsMajority();
           // exit prevote: polka prevote
           if (major === null || (major !== -1 && this.isProposalComplete())) {
-            console.log("enter precommit: +2/3 major prevote");
-            pvs.showVotes();
+            //console.log("enter precommit: +2/3 major prevote");
+            //pvs.showVotes();
             this.precommit(this.height, this.round);
           } else if (pvs?.hasTwoThirdsAny()) {
             // +2/3 any: wait for more prevote
-            console.log("enter prevotewait: +2/3 any prevote");
+           // console.log("enter prevotewait: +2/3 any prevote");
             this.prevoteWait(this.height, this.round);
           }
         }
@@ -191,8 +191,8 @@ class State {
           this.precommit(this.height, v.round);
           let major = pcs.getTwoThirdsMajority();
           if (major !== null) {
-            console.log(`enter commit: +2/3 precommits`);
-            pcs.showVotes();
+            //console.log(`enter commit: +2/3 precommits`);
+            //pcs.showVotes();
             this.commit(this.height, v.round);
           } else {
             this.precommitWait(this.height, v.round);
@@ -211,7 +211,7 @@ class State {
   };
 
   private handleTimeout = (ti: Timeout) => {
-    console.log(`handling timeout`, ti);
+    //console.log(`handling timeout`, ti);
     const { height, round, step } = ti;
     switch (step) {
       case RoundStep.NewHeight:
@@ -262,7 +262,7 @@ class State {
   };
 
   private updatePriority = () => {
-    console.log(`Priority updated`);
+    //console.log(`Priority updated`);
   };
 
   // propose
@@ -305,10 +305,10 @@ class State {
   private decideProposal = () => {
     let b;
     if (this.validBlock !== null) {
-      console.log(`valid block in ${this.validRound}. reuse`);
+    //  console.log(`valid block in ${this.validRound}. reuse`);
       b = this.validBlock;
     } else {
-      console.log(`newly created block`);
+    //  console.log(`newly created block`);
       b = this.createProposalBlock();
     }
     let p: Proposal = {
@@ -327,12 +327,12 @@ class State {
 
   private isProposalComplete = () => {
     if (this.proposal === null) {
-      console.log(`no proposal exists`);
+    //  console.log(`no proposal exists`);
       return false;
     }
     // new propoal
 
-    console.log("new proposal completed", this.proposal);
+    //console.log("new proposal completed", this.proposal);
     if (this.proposal.polRound === -1) return true;
     // if not new, check if +2/3 Prevotes
     if (
